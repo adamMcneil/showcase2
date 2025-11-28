@@ -1,16 +1,36 @@
-# React + Vite
+# Showcase Gallery
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Small React (Vite) app that displays the first image from each folder in the repository's `images/` directory. Includes a GitHub Actions workflow that builds and deploys the site to GitHub Pages on push to `main`.
 
-Currently, two official plugins are available:
+How it works
+- `scripts/generate-manifest.js` scans `images/*` directories and generates `src/imageIndex.json` with objects `{ dir, first }` where `first` is a path like `/images/dir/firstfile.jpg`.
+- The React app imports `src/imageIndex.json` and renders a card per folder showing the first image and directory name.
+- The GitHub Actions workflow runs `npm run build` and publishes `dist/` to GitHub Pages.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Run locally
 
-## React Compiler
+1. Install deps:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+2. Run dev server (manifest is regenerated before dev):
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run dev
+```
+
+3. Build for production:
+
+```bash
+npm run build
+```
+
+Deployment
+
+On each push to `main`, GitHub Actions will run the build and deploy `dist/` to GitHub Pages. The workflow uses the provided `GITHUB_TOKEN` so no additional secrets are required.
+
+Notes
+- Make sure your repository has `images/` with subfolders containing at least one image each.
+- If you want the site to be hosted under a repository path (e.g., `https://username.github.io/repo/`) the Vite `base` is set to `./` so it should work for typical GitHub Pages deployments.
